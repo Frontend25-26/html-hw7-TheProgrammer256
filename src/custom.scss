@@ -4,8 +4,6 @@ $button-color: #2F3337;
 $grayed-op: 64%;
 $grayed-border: 48%;
 $grayed-bg: 12%;
-$bar-widths-left: 90%, 70%, 100%, 20%, 25%;
-$bar-widths-right: 80%, 60%, 20%, 50%, 25%;
 
 @mixin set-text($size, $height) {
   margin: 0;
@@ -45,7 +43,6 @@ $bar-widths-right: 80%, 60%, 20%, 50%, 25%;
 }
 
 @mixin barline($color) {
-	position: absolute;
 	height: 0.5rem;
 	background-color: $color;
 	border-radius: 0.25rem;
@@ -172,29 +169,32 @@ p.Copyright {
 		.Right {
 			margin-right: -1rem;
 		}
-		@for $i from 1 through length($bar-widths-left) {
-				.Left > .BarItem:nth-child(#{$i}) .Foreground {
-					width: nth($bar-widths-left, $i);
-				}
-				.Right > .BarItem:nth-child(#{$i}) .Foreground {
-					width: nth($bar-widths-right, $i);
-				}
-			}
 		&Column {
 			flex: 1;
 			.BarItem {
 				@include vert(1rem);
 				padding: 1rem;
-				.Bar {
-					position: relative;
+				.ProgressBar {
+					width: 100%;
 					height: 0.5rem;
-					.Background {
-						@include barline(rgba($bd-color, $grayed-bg));
-						width: 100%;
-					}
-					.Foreground {
-						@include barline($text-color);
-					}
+          appearance: none;
+          @supports (-moz-appearance: none) {
+          	-moz-appearance: none;
+          	@include barline(rgba($bd-color, $grayed-bg));
+          	&::-moz-progress-bar {
+	          	@include barline($text-color);
+	          }
+          }
+
+          @supports (-webkit-appearance: none) {
+          	-webkit-appearance: none;
+          	&::-webkit-progress-bar {
+	          	@include barline(rgba($bd-color, $grayed-bg));
+	          }
+	          &::-webkit-progress-value {
+	          	@include barline($text-color);
+	          }
+          }
 				}
 			}
 		}
@@ -250,6 +250,11 @@ p.Copyright {
 
 			.Desc {
 				@include vert(0.5rem);
+
+				a {
+					text-decoration: none;
+					color: $text-color;
+				}
 			}
 		}
 	}
